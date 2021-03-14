@@ -18,12 +18,17 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "POST /users" do
+    user_attributes = FactoryBot.attributes_for(:user)
     context "when it has valid parameters" do 
       it "create the user with correct attributes" do
-        user_attributes = FactoryBot.attributes_for(:user)
         post users_path, params: {user: user_attributes}
         expect(User.last).to have_attributes(user_attributes)
       end
+    end
+
+    it "should redirect_to users_path" do
+      post users_path, params: {user: user_attributes}
+      expect(response).to redirect_to users_path
     end
 
     context "when it has no valid parameters" do
@@ -32,7 +37,7 @@ RSpec.describe "Users", type: :request do
           post users_path, params: {user:{ name: '', kind: '', level: '' }}
         }.to_not change(User, :count)  
       end
-    end 
+    end
   end
 
 end
