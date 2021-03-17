@@ -4,6 +4,6 @@ Rails.application.routes.draw do
 
   resources :weapons
 
-  resources :enemies, only: [:update, :destroy]
+  resources :enemies
   
 end

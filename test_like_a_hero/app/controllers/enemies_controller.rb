@@ -1,6 +1,30 @@
 class EnemiesController < ApplicationController
-  before_action :set_enemy
-  
+  before_action :set_enemy, only: [:show, :update, :destroy]
+  skip_before_action :verify_authenticity_token
+
+  def index
+    @enemies = Enemy.all
+    render json: @enemies, status: :ok 
+  end
+
+  def show
+    @enemy = Enemy.find(params[:id])
+    if @enemy
+      render json: @enemy, status: :ok
+    else
+      render json: { errors: @enemy.errors }, status: :unprocessable_entity
+    end
+  end
+
+  def create
+    @enemy = Enemy.new(enemy_params)
+    if @enemy.save
+      render json: @enemy, status: 201
+    else
+      render json: { message: @enemy.errors.messages }, status: :unprocessable_entity
+    end
+  end
+
   def update
     if @enemy.update(enemy_params)
       render json: @enemy, status: :ok
